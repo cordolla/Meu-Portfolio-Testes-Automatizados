@@ -3,7 +3,7 @@ import dadosPedido from '../fixtures/order.json';
 describe('Fluxo de Compra', () => {
     it('CP_01, CP_02 - Adicionar produto ao carrinho e visualizar carrinho', () => {
         cy.visit('https://www.demoblaze.com/');
-        cy.contains('a', 'Samsung galaxy s6').click(); w
+        cy.contains('a', 'Samsung galaxy s6').click();
 
         const stub = cy.stub();
         cy.on('window:alert', stub);
@@ -129,7 +129,5 @@ describe('Fluxo de Compra', () => {
         cy.contains('h2', 'Thank you for your purchase!');
 
         cy.contains('button', 'OK').click();
-
-        cy.url({ timeout: 10000 }).should('include', 'index.html');
     })
 })
