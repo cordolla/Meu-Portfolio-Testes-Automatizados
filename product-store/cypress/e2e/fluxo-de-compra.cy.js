@@ -2,7 +2,6 @@ import { generateUser } from '../support/userFactory';
 import homePage from '../support/pages/HomePage';
 import compraPage from '../support/pages/CompraPage'
 import signupPage from '../support/pages/SignupPage';
-import loginPage from '../support/pages/LoginPage';
 
 describe('Fluxo de Compra', () => {
 
@@ -16,20 +15,22 @@ describe('Fluxo de Compra', () => {
     }); 
 
     beforeEach(() => {
+        cy.loginViaSession(usuarioLogin.username, usuarioLogin.password);
+
+        compraPage.limparCarrinho();
+
         homePage.acessar();
-        homePage.abrirLogin();
-        loginPage.preencherFormularioLogin(usuarioLogin.username, usuarioLogin.password);
-        loginPage.loginEValidar(usuarioLogin.username)
+
     }) 
 
-    it('CP_01, CP_02 - Adicionar produto ao carrinho e visualizar carrinho', () => {
+    it('CP_01, CP_02 - Adicionar produto ao carrinho e visualizar carrinho', {tags: ['@smoke', '@checkout']}, () => {
         compraPage.clicarNoProduto('Samsung galaxy s6');
         compraPage.adicionarProdutoNoCarrinhoEValidarMensagem();
         homePage.clicarNoMenu('Cart')
         compraPage.validarProdutoNoCarrinho('Samsung galaxy s6');
     })
 
-    it('CP_03 - Finalizar compra', () => {
+    it('CP_03 - Finalizar compra', {tags: ['@smoke', '@checkout']}, () => {
         compraPage.clicarNoProduto('Samsung galaxy s6');
         compraPage.adicionarProdutoNoCarrinhoEValidarMensagem();
         homePage.clicarNoMenu('Cart')
@@ -39,7 +40,7 @@ describe('Fluxo de Compra', () => {
         compraPage.finalizarCompraEValidarMensagem();
     })
 
-    it('CP_04 - Validar cálculo total do carrinho', () => {
+    it('CP_04 - Validar cálculo total do carrinho', {tags: ['@regressao', '@checkout']}, () => {
         compraPage.clicarNoProduto('Samsung galaxy s6');
         compraPage.adicionarProdutoNoCarrinhoEValidarMensagem();
         homePage.acessar();
@@ -51,7 +52,7 @@ describe('Fluxo de Compra', () => {
         compraPage.validarTotalCarrinho();
     })
 
-    it('CP_05 - Remover produto do carrinho', () => {
+    it('CP_05 - Remover produto do carrinho', {tags: ['@regressao', '@checkout']}, () => {
         compraPage.clicarNoProduto('Samsung galaxy s6');
         compraPage.adicionarProdutoNoCarrinhoEValidarMensagem();
         homePage.clicarNoMenu('Cart')
@@ -60,7 +61,7 @@ describe('Fluxo de Compra', () => {
         compraPage.validarProdutoNaoEstaNoCarrinho('Samsung galaxy s6')
     })
 
-    it('CP_06 - Após compra com sucesso redirecionar para a "Home Page"', () => {
+    it('CP_06 - Após compra com sucesso redirecionar para a "Home Page"', {tags: ['@regressao', '@checkout']}, () => {
         compraPage.clicarNoProduto('Samsung galaxy s6');
         compraPage.adicionarProdutoNoCarrinhoEValidarMensagem();
         homePage.clicarNoMenu('Cart')

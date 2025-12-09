@@ -4,12 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+"cy:open": "cypress open",
+    "cy:run": "cypress run",
+    
+    "test:smoke": "cypress run --env grepTags=@smoke",
+    "test:regressao": "cypress run --env grepTags=@regressao",
+    
+    "test:auth": "cypress run --env grepTags=@auth",
+    "test:checkout": "cypress run --env grepTags=@checkout",
+    "test:catalogo": "cypress run --env grepTags=@catalogo",
+    
+    "test:tudo": "cypress run"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@cypress/grep": "^5.0.1",
     "cypress": "^15.7.0"
   }
 }

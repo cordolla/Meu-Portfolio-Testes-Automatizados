@@ -3,7 +3,6 @@ import BasePage from "./BasePage";
 class LoginPage extends BasePage{
     
     preencherFormularioLogin(username, password) {
-        cy.wait(500);
         cy.get('#loginusername').clear();
         cy.get('#loginpassword').clear();
 

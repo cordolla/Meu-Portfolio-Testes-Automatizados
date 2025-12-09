@@ -4,27 +4,27 @@ import compraPage from '../support/pages/CompraPage';
 
 describe('Fluxo de Navegação e Catálogo', () => {
 
-    it('NV_01 - Validar exibição dos produtos na Home Page', () => {
+    it('NV_01 - Validar exibição dos produtos na Home Page', {tags: ['@smoke', '@catalogo']}, () => {
         homePage.acessar();
         navegacaoPage.validarProdutoNaHome('Samsung galaxy s6');
         navegacaoPage.validarProdutoNaHome('Nokia lumia 1520');
     })
 
-    it('NL_02 - Filtrar produtos por categoria "Laptops"', () => {
+    it('NL_02 - Filtrar produtos por categoria "Laptops"', {tags: ['@regressao', '@catalogo']}, () => {
         homePage.acessar();
         navegacaoPage.clicarCategorias('Laptops');
         navegacaoPage.validarAusenciaDeProduto('Samsung galaxy s6');
         navegacaoPage.validarAusenciaDeProduto('Apple monitor 24');
     })
 
-    it('NL_03 - Filtrar produtos por categoria "Monitors"', () => {
+    it('NL_03 - Filtrar produtos por categoria "Monitors"', {tags: ['@regressao', '@catalogo']}, () => {
         homePage.acessar();
         navegacaoPage.clicarCategorias('Monitors');
         navegacaoPage.validarAusenciaDeProduto('Samsung galaxy s6');
         navegacaoPage.validarAusenciaDeProduto('Sony vaio i5');
     })
 
-    it('NL_04 - Navegar entre páginas (Paginação)', () => {
+    it('NL_04 - Navegar entre páginas (Paginação)', {tags: ['@regressao', '@catalogo']}, () => {
         homePage.acessar();
         navegacaoPage.validarProdutoNaHome('Samsung galaxy s6');
         navegacaoPage.avancarPaginacao();
@@ -33,7 +33,7 @@ describe('Fluxo de Navegação e Catálogo', () => {
         navegacaoPage.validarProdutoNaHome('Samsung galaxy s7');
     })
 
-    it('NL_05 - Acessar detalhes do produto', () => {
+    it('NL_05 - Acessar detalhes do produto', {tags: ['@regressao', '@catalogo']}, () => {
         homePage.acessar();
         compraPage.clicarNoProduto('Nexus 6');
         navegacaoPage.validarDescricaoDoProduto();

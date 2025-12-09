@@ -15,7 +15,6 @@ class CompraPage extends BasePage {
         cy.contains('a', 'Add to cart').click();
         
         cy.wait('@postAddCart').then((interception) => {
-        // Opcional: Validar que o status foi 200
         expect(interception.response.statusCode).to.eq(200);
     });
         cy.wrap(stub).should('have.been.calledWith', Cypress.sinon.match('Product added.'));
@@ -76,9 +75,23 @@ class CompraPage extends BasePage {
         cy.wait(1000);
 
         cy.get('.confirm').should('exist').click({ force: true });
-    }
+    }    
 
-    
+    limparCarrinho() {
+        cy.visit('https://www.demoblaze.com/cart.html');
+        
+        cy.get('body').then($body => {
+            if ($body.find('tbody tr.success').length > 0) {
+                cy.intercept('POST', '**/deleteitem').as('deleteItem');
+
+                cy.get('a[onclick*="deleteItem"]').each($btn => {
+                    cy.wrap($btn).click();
+                    cy.wait('@deleteItem');
+                });
+                cy.get('tbody tr.success').should('not.exist');
+            }
+        });
+    }
 }
 
 export default new CompraPage

@@ -23,3 +23,16 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import loginPage from './pages/LoginPage';
+import homePage from './pages/HomePage';
+
+Cypress.Commands.add('loginViaSession', (username, password) => {
+  cy.session([username, password], () => {
+    homePage.acessar();
+    homePage.abrirLogin();
+    loginPage.preencherFormularioLogin(username, password);
+    loginPage.loginEValidar(username);
+  }, {
+    cacheAcrossSpecs: true 
+  });
+});

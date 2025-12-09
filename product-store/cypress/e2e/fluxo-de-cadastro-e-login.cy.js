@@ -12,22 +12,22 @@ describe('Fluxo de cadastro', () => {
         homePage.abrirCadastro();
     })
 
-    it('CL_01 - Cadastrar usuario com Username e Password válido', () => {        
+    it('CL_01 - Cadastrar usuario com Username e Password válido', {tags: ['@smoke', '@auth']}, () => {        
         signupPage.preencherFormularioCadastro(usuarioCadastro.username, usuarioCadastro.password, {setTimeout : 10000});
         signupPage.registrarEValidar('Sign up successful.');
     })
 
-    it('CL_02 - Cadastrar usuario com Username ja cadastrado', () => {
+    it('CL_02 - Cadastrar usuario com Username ja cadastrado', {tags: ['@regressao', '@auth']},  () => {
         signupPage.preencherFormularioCadastro('TesteInvalido', usuarioCadastro.password);
         signupPage.registrarEValidar('This user already exist.')
     })
 
-    it('CL_03 - Validar obrigatoriedade do Username no cadastro', () => {
+    it('CL_03 - Validar obrigatoriedade do Username no cadastro', {tags: ['@regressao', '@auth']}, () => {
         signupPage.preencherFormularioCadastro('', usuarioCadastro.password);
         signupPage.registrarEValidar('Please fill out Username and Password.')
     })
 
-    it('CL_04 - Validar obrigatoriedade do Password no cadastro', () => {
+    it('CL_04 - Validar obrigatoriedade do Password no cadastro', {tags: ['@regressao', '@auth']}, () => {
         signupPage.preencherFormularioCadastro(usuarioCadastro.username, '');
         signupPage.registrarEValidar('Please fill out Username and Password.')
     })
@@ -49,23 +49,23 @@ describe('Login', () => {
         homePage.abrirLogin();
     }) 
 
-    it('CL_06 - Realizar login com usuario cadastrado com sucesso', () => {
+    it('CL_06 - Realizar login com usuario cadastrado com sucesso', { tags: ['@smoke', '@auth'] }, () => {
         loginPage.preencherFormularioLogin(usuarioLogin.username, usuarioLogin.password);
         loginPage.loginEValidar(usuarioLogin.username);
     })
 
-    it('CL_09 - Realizar Logout', () => {
+    it('CL_09 - Realizar Logout', {tags: ['@regressao', '@auth']}, () => {
         loginPage.preencherFormularioLogin(usuarioLogin.username, usuarioLogin.password);
         loginPage.loginEValidar(usuarioLogin.username);
 
         homePage.realizarLogout();        
     })
 
-    it('CL_07 - Realizar login com dados de usuario invalido', () => {
+    it('CL_07 - Realizar login com dados de usuario invalido', {tags: ['@regressao', '@auth']}, () => {
         loginPage.preencherFormularioLogin('usuarioinvalido123321', usuarioLogin.password);
         loginPage.logarEValidarErro('User does not exist.');
     })
-    it('CL_08 - Realizar login com senha invalida', () => {
+    it('CL_08 - Realizar login com senha invalida', {tags: ['@regressao', '@auth']}, () => {
         loginPage.preencherFormularioLogin(usuarioLogin.username, 'testeinvalido123321');
         loginPage.logarEValidarErro('Wrong password.');
     })
