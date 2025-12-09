@@ -3,8 +3,6 @@ import signupPage from '../support/pages/SignupPage';
 import homePage from '../support/pages/HomePage';
 import loginPage from '../support/pages/LoginPage';
 
-
-
 describe('Fluxo de cadastro', () => {    
 
     const usuarioCadastro = generateUser();
@@ -15,7 +13,7 @@ describe('Fluxo de cadastro', () => {
     })
 
     it('CL_01 - Cadastrar usuario com Username e Password válido', () => {        
-        signupPage.preencherFormularioCadastro(usuarioCadastro.username, usuarioCadastro.password);
+        signupPage.preencherFormularioCadastro(usuarioCadastro.username, usuarioCadastro.password, {setTimeout : 10000});
         signupPage.registrarEValidar('Sign up successful.');
     })
 
@@ -35,7 +33,7 @@ describe('Fluxo de cadastro', () => {
     })
 });
 
-describe.only('Login', () => {
+describe('Login', () => {
 
     const usuarioLogin = generateUser();
 

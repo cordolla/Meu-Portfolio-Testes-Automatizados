@@ -1,8 +1,9 @@
 export const generateUser = () => {
-    const timeStamp = Math.floor(Date.now() / 10000);
-    const id = timeStamp.toString().slice(-5)
+    const timeStamp = Date.now();
+    const random = Math.floor(Math.random() * 9999); 
+    
     return {
-        username: `Teste${id}`,
+        username: `Teste${timeStamp}${random}`, 
         password: 'SenhaValida'
     }
 };

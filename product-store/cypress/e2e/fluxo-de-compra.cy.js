@@ -1,133 +1,74 @@
-import dadosPedido from '../fixtures/order.json';
+import { generateUser } from '../support/userFactory';
+import homePage from '../support/pages/HomePage';
+import compraPage from '../support/pages/CompraPage'
+import signupPage from '../support/pages/SignupPage';
+import loginPage from '../support/pages/LoginPage';
 
 describe('Fluxo de Compra', () => {
+
+    const usuarioLogin = generateUser();
+
+    before(() => {
+        homePage.acessar();
+        homePage.abrirCadastro();
+        signupPage.preencherFormularioCadastro(usuarioLogin.username, usuarioLogin.password);
+        signupPage.registrarEValidar('Sign up successful.');
+    }); 
+
+    beforeEach(() => {
+        homePage.acessar();
+        homePage.abrirLogin();
+        loginPage.preencherFormularioLogin(usuarioLogin.username, usuarioLogin.password);
+        loginPage.loginEValidar(usuarioLogin.username)
+    }) 
+
     it('CP_01, CP_02 - Adicionar produto ao carrinho e visualizar carrinho', () => {
-        cy.visit('https://www.demoblaze.com/');
-        cy.contains('a', 'Samsung galaxy s6').click();
-
-        const stub = cy.stub();
-        cy.on('window:alert', stub);
-
-        cy.contains('a', 'Add to cart').click();
-
-        cy.wrap(stub).should('have.been.calledWith', 'Product added');
-
-        cy.contains('a', 'Cart').click();
-        cy.contains('td', 'Samsung galaxy s6');
+        compraPage.clicarNoProduto('Samsung galaxy s6');
+        compraPage.adicionarProdutoNoCarrinhoEValidarMensagem();
+        homePage.clicarNoMenu('Cart')
+        compraPage.validarProdutoNoCarrinho('Samsung galaxy s6');
     })
 
-    it('CL_03 - Finalizar compra', () => {
-        cy.visit('https://www.demoblaze.com/');
-        cy.contains('a', 'Samsung galaxy s6').click();
-        cy.contains('h2', 'Samsung galaxy s6').should('be.visible');
-
-        const stub = cy.stub();
-        cy.on('window:alert', stub);
-
-        cy.contains('a', 'Add to cart').click();
-
-        cy.wrap(stub).should('have.been.calledWith', 'Product added');
-
-        cy.contains('a', 'Cart').click();
-        cy.contains('td', 'Samsung galaxy s6');
-
-        cy.contains('button', 'Place Order').click();
-
-        cy.get('#name').type(dadosPedido.name);
-        cy.get('#country').type(dadosPedido.country);
-        cy.get('#city').type(dadosPedido.city);
-        cy.get('#card').type(dadosPedido.card);
-        cy.get('#month').type(dadosPedido.month);
-        cy.get('#year').type(dadosPedido.year);
-
-        cy.contains('button', 'Purchase').click();
-
-        cy.contains('h2', 'Thank you for your purchase!');
-
-        cy.contains('button', 'OK').click();
-
+    it('CP_03 - Finalizar compra', () => {
+        compraPage.clicarNoProduto('Samsung galaxy s6');
+        compraPage.adicionarProdutoNoCarrinhoEValidarMensagem();
+        homePage.clicarNoMenu('Cart')
+        compraPage.validarProdutoNoCarrinho('Samsung galaxy s6');
+        compraPage.botaoDeCompra();
+        compraPage.preencherFormularioDeCompra();
+        compraPage.finalizarCompraEValidarMensagem();
     })
 
-    it('CL_04 - Validar cálculo total do carrinho', () => {
-        cy.visit('https://www.demoblaze.com/');
-        cy.contains('a', 'Samsung galaxy s6').click();
-        cy.contains('h2', 'Samsung galaxy s6').should('be.visible');
-
-                const stub = cy.stub();
-        cy.on('window:alert', stub);
-
-        cy.contains('a', 'Add to cart').click();
-
-        cy.wrap(stub).should('have.been.calledWith', 'Product added');
-
-        cy.visit('https://www.demoblaze.com/');
-        cy.contains('a', 'Nokia lumia 1520').click();
-        cy.contains('h2', 'Nokia lumia 1520').should('be.visible');
-
-        const stub1 = cy.stub();
-        cy.on('window:alert', stub1);
-
-        cy.contains('a', 'Add to cart').click();
-
-        cy.wrap(stub1).should('have.been.calledWith', 'Product added');
-
-        cy.contains('a', 'Cart').click();
-        
-        cy.contains('td', 'Samsung galaxy s6').should('exist');
-        
-        cy.contains('td', 'Nokia lumia 1520').should('exist');
-
-        cy.contains('h3', '1180').should('exist')
-
+    it('CP_04 - Validar cálculo total do carrinho', () => {
+        compraPage.clicarNoProduto('Samsung galaxy s6');
+        compraPage.adicionarProdutoNoCarrinhoEValidarMensagem();
+        homePage.acessar();
+        compraPage.clicarNoProduto('Nokia lumia 1520');
+        compraPage.adicionarProdutoNoCarrinhoEValidarMensagem();
+        homePage.clicarNoMenu('Cart')
+        compraPage.validarProdutoNoCarrinho('Samsung galaxy s6');
+        compraPage.validarProdutoNoCarrinho('Nokia lumia 1520');
+        compraPage.validarTotalCarrinho();
     })
 
-    it('CL_05 - Remover produto do carrinho', () => {
-        cy.visit('https://www.demoblaze.com/');
-        cy.contains('a', 'Samsung galaxy s6').click();
-
-        const stub = cy.stub();
-        cy.on('window:alert', stub);
-
-        cy.contains('a', 'Add to cart').click();
-
-        cy.wrap(stub).should('have.been.calledWith', 'Product added');
-
-        cy.contains('a', 'Cart').click();
-        cy.contains('td', 'Samsung galaxy s6');
-
-        cy.contains('a', 'Delete').should('exist').click()
-
-        cy.contains('td', 'Samsung galaxy s6', { timeout: 10000 }).should('not.exist');
+    it('CP_05 - Remover produto do carrinho', () => {
+        compraPage.clicarNoProduto('Samsung galaxy s6');
+        compraPage.adicionarProdutoNoCarrinhoEValidarMensagem();
+        homePage.clicarNoMenu('Cart')
+        compraPage.validarProdutoNoCarrinho('Samsung galaxy s6');
+        compraPage.removerProdutoDoCarrinho();
+        compraPage.validarProdutoNaoEstaNoCarrinho('Samsung galaxy s6')
     })
 
-    it.only('CL_06 - Após compra com sucesso redirecionar para a "Home Page"', () => {
-        cy.visit('https://www.demoblaze.com/');
-        cy.contains('a', 'Samsung galaxy s6').click();
-        cy.contains('h2', 'Samsung galaxy s6').should('be.visible');
-
-        const stub = cy.stub();
-        cy.on('window:alert', stub);
-
-        cy.contains('a', 'Add to cart').click();
-
-        cy.wrap(stub).should('have.been.calledWith', 'Product added');
-
-        cy.contains('a', 'Cart').click();
-        cy.contains('td', 'Samsung galaxy s6');
-
-        cy.contains('button', 'Place Order').click();
-
-        cy.get('#name').type(dadosPedido.name);
-        cy.get('#country').type(dadosPedido.country);
-        cy.get('#city').type(dadosPedido.city);
-        cy.get('#card').type(dadosPedido.card);
-        cy.get('#month').type(dadosPedido.month);
-        cy.get('#year').type(dadosPedido.year);
-
-        cy.contains('button', 'Purchase').click();
-
-        cy.contains('h2', 'Thank you for your purchase!');
-
-        cy.contains('button', 'OK').click();
-    })
+    it('CP_06 - Após compra com sucesso redirecionar para a "Home Page"', () => {
+        compraPage.clicarNoProduto('Samsung galaxy s6');
+        compraPage.adicionarProdutoNoCarrinhoEValidarMensagem();
+        homePage.clicarNoMenu('Cart')
+        compraPage.validarProdutoNoCarrinho('Samsung galaxy s6');
+        compraPage.botaoDeCompra();
+        compraPage.preencherFormularioDeCompra();
+        compraPage.finalizarCompraEValidarMensagem();
+        compraPage.validarSucessoCompra();
+        homePage.validarHomePage();
+    })  
 })

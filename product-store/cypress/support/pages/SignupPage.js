@@ -2,12 +2,17 @@ import BasePage from './BasePage';
 
 class SignupPage extends BasePage{
     preencherFormularioCadastro(username, password){
-        cy.wait(500);
-        cy.get('#sign-username').clear();
-        cy.get('#sign-password').clear();
+        if(username){
+            cy.get('#sign-username').should('be.visible').invoke('val', username).trigger('change')
+        } else {
+            cy.get('#sign-username').clear();
+        }
 
-        if(username) cy.get('#sign-username').type(username);
-        if(password) cy.get('#sign-password').type(password);
+        if(password){
+            cy.get('#sign-password').should('be.visible').invoke('val', password).trigger('change');
+        } else {
+            cy.get('#sign-password').clear();
+        }
     }
 
     registrarEValidar(mensagemEsperada) {

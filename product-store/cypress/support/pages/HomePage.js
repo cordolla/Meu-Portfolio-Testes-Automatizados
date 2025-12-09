@@ -17,11 +17,17 @@ class HomePage extends BasePage{
     abrirCadastro() {
         cy.get('#signin2').click();
         cy.get('#signInModalLabel', { timeout: 10000 }).should('be.visible');
+        cy.get('#sign-username').should('be.visible');
     }
 
     realizarLogout() {
         cy.get('#logout2', { timeout: 10000 }).should('be.visible').click();
         cy.get('#login2', { timeout: 10000 }).should('be.visible');
+    }
+
+    validarHomePage() {
+        cy.url({ timeout: 10000 }).should('include', 'index.html');
+        cy.get('#cat').should('be.visible');
     }
 }
 

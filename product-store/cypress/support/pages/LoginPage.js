@@ -1,4 +1,6 @@
-class LoginPage {
+import BasePage from "./BasePage";
+
+class LoginPage extends BasePage{
     
     preencherFormularioLogin(username, password) {
         cy.wait(500);
@@ -11,7 +13,7 @@ class LoginPage {
     loginEValidar(username) {
         const seletorBotao = 'button[onclick="logIn()"]';
         cy.get(seletorBotao).click();
-        cy.contains('a', `Welcome ${username}`, { timeout: 10000 })
+        cy.contains('a', `Welcome ${username}`)
           .should('be.visible');
     }
 
